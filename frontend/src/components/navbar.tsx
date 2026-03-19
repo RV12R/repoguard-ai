@@ -21,30 +21,32 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <Shield className="h-5 w-5 transition-transform group-hover:rotate-12" />
-          <span className="font-mono text-sm font-bold tracking-tight">
-            REPOGUARD<span className="text-muted-foreground">.AI</span>
-          </span>
-        </Link>
+        <div className="flex items-center gap-6">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <Shield className="h-5 w-5 transition-transform group-hover:rotate-12" />
+            <span className="font-mono text-sm font-bold tracking-tight">
+              REPOGUARD<span className="text-muted-foreground">.AI</span>
+            </span>
+          </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`px-3 py-1.5 text-sm font-mono transition-colors rounded-md ${
-                pathname === link.href
-                  ? "text-foreground bg-accent"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`px-3 py-1.5 text-sm font-mono transition-colors rounded-md ${
+                  pathname === link.href
+                    ? "text-foreground bg-accent"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
         {/* Actions */}
         <div className="flex items-center gap-2">
