@@ -131,17 +131,56 @@ class AIAnalyzer:
             logger.error(f"Gemini API error: {e}")
         return None
 
+    @staticmethod
+    async def _call_xai(code_context: str) -> Optional[list[dict]]:
+        """Call xAI API (grok-2) via standard httpx since it is OpenAI-compatible."""
+        api_key = os.getenv("XAI_API_KEY")
+        if not api_key:
+            return None
+
+        try:
+            import httpx
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": "grok-2-latest",
+                "messages": [
+                    {"role": "system", "content": ANALYSIS_PROMPT},
+                    {"role": "user", "content": f"Analyze this codebase:\n{code_context}"},
+                ],
+                "temperature": 0.1,
+                "response_format": {"type": "json_object"}
+            }
+            async with httpx.AsyncClient(timeout=120.0) as client:
+                response = await client.post("https://api.x.ai/v1/chat/completions", json=payload, headers=headers)
+                response.raise_for_status()
+                data = response.json()
+                content = data["choices"][0]["message"]["content"]
+                if content:
+                    parsed = json.loads(content)
+                    if isinstance(parsed, dict):
+                        return parsed.get("vulnerabilities", parsed.get("findings", []))
+                    return parsed if isinstance(parsed, list) else []
+        except Exception as e:
+            logger.error(f"xAI API error: {e}")
+        return None
+
     @classmethod
     async def analyze(cls, repo_path: str) -> list[VulnerabilityOut]:
-        """Run AI analysis with Groq primary and Gemini fallback."""
+        """Run AI analysis with xAI primary, Groq secondary, and Gemini fallback."""
         code_context = _collect_code_files(repo_path)
         if not code_context.strip():
             return []
 
-        # Try Groq first, fall back to Gemini
-        raw_findings = await cls._call_groq(code_context)
+        # Cascade fallback: xAI -> Groq -> Gemini
+        raw_findings = await cls._call_xai(code_context)
+        if raw_findings is None:
+            raw_findings = await cls._call_groq(code_context)
         if raw_findings is None:
             raw_findings = await cls._call_gemini(code_context)
+        
         if raw_findings is None:
             logger.warning("No AI provider available — skipping AI analysis")
             return []
