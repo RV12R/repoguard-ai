@@ -145,7 +145,7 @@ class AIAnalyzer:
                 "Content-Type": "application/json",
             }
             payload = {
-                "model": "grok-beta",
+                "model": "grok-2-latest",
                 "messages": [
                     {"role": "system", "content": ANALYSIS_PROMPT},
                     {"role": "user", "content": f"Analyze this codebase:\n{code_context}"},
