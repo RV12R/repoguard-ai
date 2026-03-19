@@ -151,7 +151,7 @@ class AIAnalyzer:
                     {"role": "user", "content": f"Analyze this codebase:\n{code_context}"},
                 ],
                 "temperature": 0.1,
-                "response_format": {"type": "json_object"}
+                "stream": False
             }
             async with httpx.AsyncClient(timeout=120.0) as client:
                 response = await client.post("https://api.x.ai/v1/chat/completions", json=payload, headers=headers)
