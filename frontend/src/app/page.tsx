@@ -108,8 +108,8 @@ export default function HomePage() {
             Used by security researchers &amp; audit teams
           </p>
           <div className="flex items-center justify-center gap-6 text-muted-foreground/40 font-mono text-xs">
-            <a href="https://rekt.news" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
-              rekt.news
+            <a href="https://github.com/RV12R/repoguard-ai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+              GitHub Repo
             </a>
             <span>·</span>
             <span>Open Source</span>

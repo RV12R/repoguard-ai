@@ -8,9 +8,15 @@ RepoGuard AI is an autonomous, AI-powered security scanner for GitHub repositori
 
 ## ⚡ Key Features
 
+- **Strict Data Privacy**: All private scans and analysis logs are fully isolated. User codebase data is **never** made public or shared.
 - **No Persistence**: Repositories are cloned to ephemeral storage and automatically securely wiped immediately after analysis.
 - **Hybrid Analysis Pipeline**: Combines deterministic static analysis (`Semgrep` / `Bandit`) with deep reasoning LLMs (`Llama-3.3-70B` via Groq, with Google `Gemini 2` fallback).
 - **Web3 & AI Risk Detection**: Tailored prompts specifically detect Solidity reentrancy, access control flaws, LLM prompt injections, and data leakages natively.
+
+---
+
+## 🔗 Official Repository
+**[https://github.com/RV12R/repoguard-ai](https://github.com/RV12R/repoguard-ai)**
 - **Executive Reporting**: Automatically generates professional and structured PDF audit reports using ReportLab.
 - **Auto-Fix Integration**: "One-click" branch creation patches vulnerabilities using AI-suggested code fixes.
 - **Streaming Live Logs**: WebSocket-powered live progress bars and streaming terminal logs directly to the browser.
