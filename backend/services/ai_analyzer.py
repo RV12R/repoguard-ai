@@ -57,11 +57,11 @@ def _collect_code_files(repo_path: str, max_files: int = 30, max_size: int = 800
                     content = f.read(max_size)
                 files_content.append(f"\n--- FILE: {relpath} ---\n{content}")
                 total_chars += len(content)
-                if len(files_content) >= max_files or total_chars > 100000:
+                if len(files_content) >= max_files or total_chars > 40000:
                     break
             except Exception:
                 continue
-        if len(files_content) >= max_files or total_chars > 100000:
+        if len(files_content) >= max_files or total_chars > 40000:
             break
 
     return "\n".join(files_content)
