@@ -1,58 +1,65 @@
 # 🛡️ RepoGuard AI
 
-## 🎯 Our Goal
-Build an autonomous, production-ready AI-powered security scanner for GitHub repositories from scratch at zero cost. The goal was to create a tool where users can paste a GitHub URL, and the system securely clones the code, runs static analysis, deeply analyzes logic with AI, and generates a professional PDF report with auto-fix capabilities.
+RepoGuard AI is an autonomous, AI-powered security scanner for GitHub repositories. Designed to seamlessly integrate into modern developer workflows, it securely clones code, runs high-speed static analysis, performs deep semantic vulnerability reviews using LLMs, and generates professional PDF reports. It also ships with zero-click vulnerability remediation capabilities.
 
-## 🧠 Our Decisions
-1. **Frontend Aesthetic**: Chose a pure Black & White, `Rekt.news`-inspired minimalist design with dark mode support, utilizing Next.js 15, Tailwind CSS, and Shadcn/ui for a highly responsive, premium UI.
-2. **Backend Architecture**: Built an async Python FastAPI backend to handle complex orchestration, ensuring absolute zero code persistence (cloned repos are immediately deleted after analysis).
-3. **AI Pipeline**: Selected Groq's `Llama-3.3-70B` as the primary LLM for deep review (due to its incredible speed and free tier availability), with Google's `Gemini 2.0 Flash` as a reliable free fallback.
-4. **Static Tooling**: Integrated `Semgrep` and `Bandit` as foundational layers to catch known vulnerabilities fast before sending logic context to the LLM.
-5. **Database**: Chosen Supabase PostgreSQL for a robust, free-tier database to track scan histories and vulnerabilities.
-6. **Live Tracking**: Implemented real-time WebSocket communication to stream logs and progress directly from the backend to the frontend UI terminal.
-7. **Pragmatic Workarounds**: Since Python was absent on the local Windows machine, a fully interactive "Demo Mode" was integrated directly into the Next.js frontend to visualize the final product without waiting for environmental setups.
-
-## ✅ What We Have Done
-- **Full Architecture Scaffolded**: Created the complete Docker-ready workspace, environment templates, and CI/CD pipelines (`.github/workflows/ci.yml`).
-- **Frontend Completed & Refined**: Built all UI screens (Landing, Dashboard, New Scan, Scan Results). **Fixed typography and overlap issues** by stripping external Google Font dependencies, enforcing stable system font stacks, and tidying the Top Navigation (relocating the "Popular Rekts" link strictly to the footer).
-- **Backend Completed**: Implemented 6 core Python services: Git clone management, Static analysis orchestration, AI context analysis, ReportLab PDF generation, Supabase DB logic, and GitHub API branching (Auto-Fixer).
-- **Interactive Demo**: Built an onboard simulation mode (`/scan/demo`) allowing users to see exactly what the completed WebSocket stream will look like.
-
-## 🚀 What Are Our Plans Next
-1. **Python Environment Setup**: Install Python 3.12 locally on the host machine to test and verify the complete backend orchestration.
-2. **Cloud Deployment**: Deploy the Next.js frontend on Vercel and the FastAPI backend to Render.com via the built-in GitHub Actions pipeline.
-3. **Authentication**: Fully connect Supabase Auth to protect the Dashboard and authorize scans to specific users.
-4. **Expand AI Rulesets**: Fine-tune the LLM systemic prompts to detect highly specific Web3/Solidity vulnerabilities (e.g., advanced reentrancy, MEV front-running) universally.
-5. **GitHub Integration**: Add GitHub App support to automatically scan Pull Requests natively upon submission.
+![UI-Black & White](https://img.shields.io/badge/UI-Black%20%26%20White-000000) ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![FastAPI](https://img.shields.io/badge/FastAPI-Python_3.12-blue) ![Supabase](https://img.shields.io/badge/Supabase-DB-green)
 
 ---
 
-## 💻 How to Run It Right Now (Frontend)
+## ⚡ Key Features
 
-Because **Node.js** is already available, you can launch the beautiful frontend and try the Demo Mode immediately:
+- **No Persistence**: Repositories are cloned to ephemeral storage and automatically securely wiped immediately after analysis.
+- **Hybrid Analysis Pipeline**: Combines deterministic static analysis (`Semgrep` / `Bandit`) with deep reasoning LLMs (`Llama-3.3-70B` via Groq, with Google `Gemini 2` fallback).
+- **Web3 & AI Risk Detection**: Tailored prompts specifically detect Solidity reentrancy, access control flaws, LLM prompt injections, and data leakages natively.
+- **Executive Reporting**: Automatically generates professional and structured PDF audit reports using ReportLab.
+- **Auto-Fix Integration**: "One-click" branch creation patches vulnerabilities using AI-suggested code fixes.
+- **Streaming Live Logs**: WebSocket-powered live progress bars and streaming terminal logs directly to the browser.
+- **Clean Aesthetic UI**: Beautiful, fully responsive minimalist black & white aesthetic with seamless dark mode support.
 
+---
+
+## 🏗️ Technical Stack
+
+### Frontend
+- **Framework**: Next.js 15 (App Router) / React 19
+- **Styling**: Tailwind CSS V4 + Shadcn/ui
+- **State Management**: Zustand
+- **Real-Time Data**: Native WebSockets
+
+### Backend
+- **Framework**: Python FastAPI
+- **Security Tools**: Semgrep, Bandit
+- **LLM Integration**: Groq API, Google Generative AI SDK
+- **Database / Auth**: Supabase PostgreSQL
+
+### Infrastructure
+- **Containerization**: Docker & Docker Compose
+- **CI/CD**: GitHub Actions pipeline pre-configured for Vercel (Frontend) and Render (Backend)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Database Setup
+1. Create a free PostgreSQL project at [Supabase](https://supabase.com).
+2. Run the provided SQL migration in `supabase/migrations/001_initial.sql`.
+3. Locate your `URL`, `anon public` key, and `service_role` secret key.
+
+### 2. Run Locally via Docker
+
+The repository includes a ready-to-use `docker-compose.yml` for standing up both the Next.js frontend and FastAPI backend alongside each other seamlessly.
+
+1. Rename the `.env.example` templates in both `frontend/` and `backend/` to `.local.env` or `.env`.
+2. Populate the environment variables with your API keys (Groq, Gemini, Supabase).
+3. Start the containers using:
 ```bash
-cd frontend
-npm ci
-npm run dev
-# The app will be running at http://localhost:3000
+docker-compose up --build
 ```
-*Click "Start Scanning", enter any dummy URL, and watch the simulation in action!*
+> The frontend will be available at `http://localhost:3000` and the API at `http://localhost:8000`.
 
-## ⚙️ How to Run the Full Engine (Once Python is Installed)
+*(Alternatively, you can run the individual environments directly using `npm run dev` in the frontend and `uvicorn main:app --reload` within a Python virtual environment in the backend.)*
 
-```bash
-cd backend
-python -m venv .venv
+---
 
-# Windows activation
-.venv\Scripts\activate
-
-pip install -r requirements.txt
-
-# Create .env file by copying .env.example and populating API keys
-cp .env.example .env
-
-uvicorn main:app --reload
-# API available at http://localhost:8000
-```
+## 🤝 Contributing
+Contributions, opened issues, and pull requests are warmly welcomed. Please ensure new features include functional fallback mechanisms and adhere strictly to the minimalist design philosophy of the frontend dashboard.
