@@ -145,7 +145,7 @@ class AIAnalyzer:
                 "Content-Type": "application/json",
             }
             payload = {
-                "model": "grok-2-latest",
+                "model": "grok-beta",
                 "messages": [
                     {"role": "system", "content": ANALYSIS_PROMPT},
                     {"role": "user", "content": f"Analyze this codebase:\n{code_context}"},
@@ -163,6 +163,8 @@ class AIAnalyzer:
                     if isinstance(parsed, dict):
                         return parsed.get("vulnerabilities", parsed.get("findings", []))
                     return parsed if isinstance(parsed, list) else []
+        except httpx.HTTPStatusError as e:
+            logger.error(f"xAI API HTTP Error {e.response.status_code}: {e.response.text}")
         except Exception as e:
             logger.error(f"xAI API error: {e}")
         return None
